@@ -1,0 +1,11 @@
+<component name="ProjectCodeStyleConfiguration">
+  <code_scheme name="Project" version="173">
+    <JSCodeStyleSettings version="0">
+      <option name="USE_SEMICOLON_AFTER_STATEMENT" value="false" />
+    </JSCodeStyleSettings>
+    <ScalaCodeStyleSettings>
+      <option name="SCALAFMT_REFORMAT_ON_FILES_SAVE" value="true" />
+      <option name="FORMATTER" value="1" />
+    </ScalaCodeStyleSettings>
+  </code_scheme>
+</component>
