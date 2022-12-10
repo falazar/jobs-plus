@@ -1,6 +1,10 @@
-# ExpressJS and TypeScript - a simple project template
+# Using ExpressJS and TypeScript - A Job Project
 
-Instructions:
+This is a demo project using ExpressJS and TypeScript to 
+ingest daily job postings and allow users to interact and search through them. 
+
+
+Setup Instructions:
 
 1. Clone this repo
 2. Run npm install
@@ -8,6 +12,3 @@ Instructions:
 4. Run npm start
 5. Visit localhost:8080
 
-To run in debug mode, simply hit F5
-
-You should have a simple express js app running, you can now edit the code in the src folder, and see it reflect in your browser.
