@@ -1,18 +1,18 @@
 class Company {
-    public id: string
+    public _id: string
     public name: string
     public sector: string
     public city: string
     public state: string
 
     constructor(
-        id: string,
+        _id: string,
         name: string,
         sector: string,
         city: string,
          state: string
     ) {
-        this.id = id
+        this._id = _id
         this.name = name
         this.sector = sector
         this.city = city

@@ -8,27 +8,31 @@
 </head>
 
 <body>
-    <%- include('partials/header') %>
-    <h1>Jobs Page</h1>
+<%- include('partials/header') %>
+<h1>Jobs Plus Results</h1>
 
-All current Jobs:
-    <% jobs.forEach((job)=> { %>
-            <h2>
-                <%= job.title %>
-            </h2>
-            <p>
-                Company: <%= job.company %>
-                Salary: <%= job.salary %>
-            </p>
-    <% }) %>
+<form action="jobs" method="post">
+    Search: <input name="search">
+    <input type="submit" value="Search">
+</form>
+
+All Found Jobs:
+<% jobs.forEach((job, index)=> { %>
+    <h2>
+        <%= index + 1 %>. <%= job.title %>
+    </h2>
+    <p>
+        Company: <%= job.company %>
+        Salary: <%= job.salary %>
+    </p>
+<% }) %>
+
+Tagline:
+<%= tagline %>
 
 
-    Tagline:
-    <%= tagline %>
 
-
-
-    <%- include('partials/footer') %>
+<%- include('partials/footer') %>
 </body>
 
 </html>

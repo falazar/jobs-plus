@@ -1,18 +1,12 @@
 class Job {
-    public title: string
-    public company: string
-    public salary: number
-
     // createdDate
 
     constructor(
-        title: string,
-        company: string,
-        salary: number
+        private _id: string,
+        public title: string,
+        public company: string,
+        public salary: number
     ) {
-        this.title = title
-        this.company = company
-        this.salary = salary
     }
 
     // public getBirthYear() {
@@ -21,7 +15,7 @@ class Job {
 }
 
 
-// Given a user, search for new jobs to display for them.
+// Load all jobs now from db....
 async function loadUsersJobs(userId: string) {  // todo ObjectId
     const jobs = [];
     // TODO load from local db.
@@ -29,12 +23,28 @@ async function loadUsersJobs(userId: string) {  // todo ObjectId
     // tslint:disable-next-line:no-console
     console.log('userId', userId)
 
-    jobs.push(new Job("Junior Developer", "CyberCoders", 50000));
-    jobs.push(new Job("Middle Level Developer", "Lending Tree", 150000));
-    jobs.push(new Job("Senior Developer", "Indeed", 200000));
+    // TODO Hard code sample set here.
+    jobs.push(new Job("1", "Junior Developer", "CyberCoders", 50000));
+    jobs.push(new Job("2", "Middle Level Developer", "Lending Tree", 150000));
+    jobs.push(new Job("3", "Senior Developer", "Indeed", 200000));
 
     return jobs;
 }
 
-export {loadUsersJobs};
+// Given a user, search for new jobs to display for them.
+async function searchJobs(search: string) {
+    const jobs = [];
+    // TODO load from local db.
+    // const jobs = db.find('job', search)
+
+    // tslint:disable-next-line:no-console
+    console.log('search inside', search)
+
+    // TODO Hard code sample set here.
+    jobs.push(new Job("1", "Junior Developer", "CyberCoders", 50000));
+
+    return jobs;
+}
+
+export {loadUsersJobs, searchJobs};
 

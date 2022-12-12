@@ -12,3 +12,7 @@ Setup Instructions:
 4. Run npm start
 5. Visit localhost:8080
 
+Start mongodb server with: 
+    brew services start mongodb/brew/mongodb-community@4.4
+
+

@@ -1,5 +1,5 @@
 import * as express from "express";
-import {loadUsersJobs} from "../models/job/job";
+import { searchJobs} from "../models/job/job";
 
 /*
  TODO LIST:
@@ -8,7 +8,7 @@ import {loadUsersJobs} from "../models/job/job";
     Add a search.
     Add a scraper.
     Add paging.
-    Add juserJobResponses.
+    Add userJobResponses.
     Show Company list.
     Add Salary Ranges.
     Filter by Salaries.
@@ -22,9 +22,29 @@ export const register = (app: express.Application) => {
 
     // Jobs page
     app.get('/jobs', async (req, res) => {
+        const jobs = await searchJobs("");
+        // todo pass thru params
+        const tagline = "No programming concept is complete without a cute animal mascot.";
+
+        res.render('jobs', {
+            jobs,
+            tagline
+        });
+    });
+    // Search with posted details the jobs.
+    app.post('/jobs', async (req, res) => {
         // TODO make jobs searchable......(Hack fast version)
+
+        const search = req.body.search;
+        // tslint:disable-next-line:no-console
+        console.log('req.body', req.body)
+        // tslint:disable-next-line:no-console
+        console.log('search', search)
         // Call out to jobs service and get a list to display.
-        const jobs = await loadUsersJobs('1234');
+        // const jobs = await loadUsersJobs('1234');
+        // const jobs = await searchJobs('developer');
+        const jobs = await searchJobs(search);
+        // todo pass thru params
         const tagline = "No programming concept is complete without a cute animal mascot.";
 
         res.render('jobs', {

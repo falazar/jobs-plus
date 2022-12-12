@@ -2,8 +2,26 @@ import dotenv from "dotenv";
 import express from "express";
 import path from "path";
 import * as routes from "./routes";
+// import {MongoClient} from "mongodb";
+// import * as mongoDB from "mongodb";
+
+
 
 dotenv.config();
+
+
+import { Schema, model, connect } from 'mongoose';
+
+// tslint:disable-next-line:no-console
+run().catch(err => console.log(err));
+
+async function run() {
+    // 4. Connect to MongoDB
+    await connect('mongodb://localhost:27017/test');
+// tslint:disable-next-line:no-console
+    console.log("DB Connected")
+}
+
 
 const port = process.env.SERVER_PORT;
 const app = express();

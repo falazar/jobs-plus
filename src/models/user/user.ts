@@ -1,5 +1,5 @@
 class User {
-    public id: string
+    public _id: string
     public firstName: string
     public lastName: string
     public city: string
@@ -11,14 +11,14 @@ class User {
     public preferredSector: string // TODO
 
     constructor(
-        id: string,
+        _id: string,
         firstName: string,
         lastName: string,
         preferredSector: string,
         city: string,
         state: string
     ) {
-        this.id = id
+        this._id = _id
         this.firstName = firstName
         this.lastName = lastName
         this.preferredSector = preferredSector
