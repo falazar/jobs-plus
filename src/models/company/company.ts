@@ -1,29 +1,34 @@
-class Company {
-    public _id: string
+import {getModelForClass, modelOptions, prop} from "@typegoose/typegoose";
+
+@modelOptions({options: {customName: 'company'}})
+class CompanyClass {
+    @prop()
     public name: string
+
+    @prop()
     public sector: string
-    public city: string
-    public state: string
 
-    constructor(
-        _id: string,
-        name: string,
-        sector: string,
-        city: string,
-         state: string
-    ) {
-        this._id = _id
-        this.name = name
-        this.sector = sector
-        this.city = city
-        this.state = state
-    }
+    @prop()
+    city: string
+
+    @prop()
+    state: string
 }
 
+export const Company = getModelForClass(CompanyClass);
 
-async function loadCompanies() {
-    // noop
+
+// TODO later need to load by a list of ids
+export async function loadCompanies(db: any) {  // todo add return type
+    // const {_id: id} = await Company.create({name: 'JohnDoe', jobs: ['Cleaner']});
+    // const companies = await Company.findById(id).exec();
+    const companies = await Company.find({});
+
+    // tslint:disable-next-line:no-console
+    console.log(companies)
+    // tslint:disable-next-line:no-console
+    console.log(typeof companies)
+
+    return companies
 }
-
-export {loadCompanies};
 
