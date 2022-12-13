@@ -1,7 +1,11 @@
 import {getModelForClass, modelOptions, prop} from "@typegoose/typegoose";
+import * as mongoose from "mongoose";
 
 @modelOptions({options: {customName: 'company'}})
-class CompanyClass {
+export class CompanyClass {
+    @prop()
+    _id: mongoose.Types.ObjectId
+
     @prop()
     public name: string
 
@@ -19,15 +23,10 @@ export const Company = getModelForClass(CompanyClass);
 
 
 // TODO later need to load by a list of ids
-export async function loadCompanies(db: any) {  // todo add return type
+export async function loadCompanies(): Promise<CompanyClass[]> {  // todo add return type
     // const {_id: id} = await Company.create({name: 'JohnDoe', jobs: ['Cleaner']});
     // const companies = await Company.findById(id).exec();
     const companies = await Company.find({});
-
-    // tslint:disable-next-line:no-console
-    console.log(companies)
-    // tslint:disable-next-line:no-console
-    console.log(typeof companies)
 
     return companies
 }

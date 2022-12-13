@@ -6,6 +6,7 @@ import { searchJobs } from "../models/job/job";
 DONE TODOLIST:
     DONE - Add a basic search.
     DONE - implement mongoose, and typegoose to connect to local mongodb.
+    DONE - Use ObjectId types, and proper return types.
 
 TODO
     Fill out Job Class.
@@ -24,6 +25,9 @@ TODO
     Ref populate references - how scalable are the underlying queries?
     https://stackoverflow.com/questions/64560563/typegoose-find-on-model-does-not-return-reference-array-fields
     Typegoose REF: https://typegoose.github.io/typegoose/docs/guides/quick-start-guide/
+
+    REF: https://javascript.plainenglish.io/improving-mongoose-model-with-typescript-9a349f41c71
+
 */
 
 export const register = async (app: express.Application) => {
@@ -34,18 +38,14 @@ export const register = async (app: express.Application) => {
 
     // Jobs page
     app.get('/jobs', async (req, res) => {
-        const db = req.app.get('db');
-        const jobs = await searchJobs(db, "");
+        const jobs = await searchJobs( "");
 
         res.render('jobs', { jobs });
     });
 
     // Search with posted details the jobs.
     app.post('/jobs', async (req, res) => {
-        // Call out to jobs service and get a list to display.
-        const db = req.app.get('db');
-        const jobs = await searchJobs(db, req.body.search);
-
+        const jobs = await searchJobs(req.body.search);
         res.render('jobs', { jobs });
     });
 
