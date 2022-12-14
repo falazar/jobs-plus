@@ -7,6 +7,7 @@ DONE TODOLIST:
     DONE - Add a basic search.
     DONE - implement mongoose, and typegoose to connect to local mongodb.
     DONE - Use ObjectId types, and proper return types.
+    DONE - Add an Indeed job scraper.
 
 TODO
     Fill out Job Class.
@@ -14,7 +15,6 @@ TODO
     Fill out User class.
     Start basic testing.
     How do we pass user id thru the site.
-    Add an Indeed job scraper.
     Add a cron ability to run daily.
     Add paging on search results.
     Add userJobResponses to save user responding to a posting.

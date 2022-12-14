@@ -4,7 +4,6 @@ import {getModelForClass, modelOptions, prop} from "@typegoose/typegoose";
 
 @modelOptions({ options: { customName: 'job' } })
 export class JobClass {
-    // @prop()
     _id: mongoose.Types.ObjectId
 
     @prop()
@@ -15,6 +14,13 @@ export class JobClass {
 
     @prop()
     public indeedJobKey?: string
+
+    @prop()
+    public link?: string
+
+    // TEMP FIELDS FOR NOW
+    @prop()
+    public company?: string
 }
 export const Job = getModelForClass(JobClass)
 

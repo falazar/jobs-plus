@@ -22,7 +22,8 @@ All Found Jobs:
         <%= index + 1 %>. <%= job.title %>
     </h2>
     <p>
-        Company: <%= job.company %>
+        Company: <%= job.company %> -
+        Link: <a href="<%= job.link %>" target="_blank">LINK</a> -
         Salary: <%= job.salary %>
     </p>
 <% }) %>
