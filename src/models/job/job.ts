@@ -4,14 +4,17 @@ import {getModelForClass, modelOptions, prop} from "@typegoose/typegoose";
 
 @modelOptions({ options: { customName: 'job' } })
 export class JobClass {
-    @prop()
+    // @prop()
     _id: mongoose.Types.ObjectId
 
     @prop()
-    public title: string;
+    public title: string
 
     @prop()
-    public companyId: string;
+    public companyId?: mongoose.Types.ObjectId
+
+    @prop()
+    public indeedJobKey?: string
 }
 export const Job = getModelForClass(JobClass)
 
@@ -19,11 +22,11 @@ export const Job = getModelForClass(JobClass)
 // Search for any jobs to display for them.
 export async function searchJobs(search: string): Promise<JobClass[]> {
     // TODO 1. Filter all jobs by 2 weeks,
-    const titleSearch = new RegExp(`.*${search}.*`, 'i');
+    const titleSearch = new RegExp(`.*${search}.*`, 'i')
     // tslint:disable-next-line:no-console
     console.log(titleSearch)
 
-    const jobs: JobClass[] = await Job.find({ title: titleSearch});
+    const jobs: JobClass[] = await Job.find({ title: titleSearch})
     // tslint:disable-next-line:no-console
     console.log(jobs)
     // tslint:disable-next-line:no-console
