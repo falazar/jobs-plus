@@ -16,7 +16,7 @@
     <input type="submit" value="Search">
 </form>
 
-All Found Jobs:
+All (<%= totalCount?.toLocaleString() %>) Found Jobs for title search: <%= search %>
 <% jobs.forEach((job, index)=> { %>
     <h2>
         <%= index + 1 %>. <%= job.title %>
@@ -24,7 +24,7 @@ All Found Jobs:
     <p>
         Company: <%= job.company %> - todo sector
         Link: <a href="<%= job.link %>" target="_blank">LINK</a> -
-        Salary: $<%= job.salaryMin %> to $<%= job.salaryMin %> yearly.
+        Salary: $<%= job.salaryMin?.toLocaleString() %> to $<%= job.salaryMax?.toLocaleString() %> yearly.
     </p>
 <% }) %>
 

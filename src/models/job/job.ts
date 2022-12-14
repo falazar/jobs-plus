@@ -30,6 +30,9 @@ export class JobClass extends TimeStamps {
     public salaryMax?: number
 
     @prop()
+    public description?: string
+
+    @prop()
     public pubDate?: Date
 
     // @prop()
@@ -43,30 +46,30 @@ export const Job = getModelForClass(JobClass)
 
 
 // Search for any jobs to display for them.
-export async function searchJobs(search: string): Promise<JobClass[]> {
+// export async function searchJobs(search: string): Promise<JobClass[], number> {
+    export async function searchJobs(search: string): Promise<[JobClass[], number]> {
     // TODO 1. Filter all jobs by 2 weeks,
     const titleSearch = new RegExp(`.*${search}.*`, 'i')
     // tslint:disable-next-line:no-console
     console.log(titleSearch)
 
-    const jobs: JobClass[] = await Job.find({ title: titleSearch})
-    // tslint:disable-next-line:no-console
-    console.log(jobs)
-    // tslint:disable-next-line:no-console
-    console.log(typeof jobs)
+    const jobs: JobClass[] = await Job.find({ title: titleSearch}).limit(10) // todo test
+    const totalCount: number = await Job.count({ title: titleSearch})// todo test
 
     // TODO then 2. If not enough, redo filter by 4 weeks.
     // TODO then 3. Calc each score for job,
     // TODO then 4. sort and return paged results
     // TODO 5. Load Companies associated and add to object.
+    /*
     const companies: CompanyClass[] = await loadCompanies();
     // tslint:disable-next-line:no-console
     console.log(companies)
     // tslint:disable-next-line:no-console
     console.log(typeof companies)
     // TODO cant return full company unless we do a reference or something??  hmmm just generic objects i guess.
+    */
 
-    return jobs;
+    return [jobs, totalCount ];
 }
 
 

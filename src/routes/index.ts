@@ -9,21 +9,25 @@ DONE TODOLIST:
     DONE - Use ObjectId types, and proper return types.
     DONE - Add an Indeed job list scraper.
     DONE - Add Salary Ranges to Job object.
+    DONE - Fill out Job Class.
 
 TODO
-    Fill out Job Class.
+    Disable semicolons on the end.
+    Disable console.log warning.
     Fill out Company Class.
     Fill out User class.
-    Start basic testing.
-    Do login part
-    How do we pass user id thru the site.
-    Add a cron ability to run daily.
+    Filter by Salaries.
+    Add userJobResponses to save user responding to a posting.
+    Filter on multiple job titles.
+    Filter OUT multiple job keywords.
     Indeed Job Page scraper.
     Indeed Company Page scraper
+    How do we pass user id thru the site.
+    Start basic testing.
+    Do login part.
+    Add a cron ability to run daily.
     Add paging on search results.
-    Add userJobResponses to save user responding to a posting.
     Show Company list.
-    Filter by Salaries.
 
     Ref populate references - how scalable are the underlying queries?
     https://stackoverflow.com/questions/64560563/typegoose-find-on-model-does-not-return-reference-array-fields
@@ -39,17 +43,17 @@ export const register = async (app: express.Application) => {
         res.render("index");
     });
 
-    // Jobs page
+    // Jobs page, on first land, show all...
     app.get('/jobs', async (req, res) => {
-        const jobs = await searchJobs( "");
+        const [jobs, totalCount] = await searchJobs( "");
 
-        res.render('jobs', { jobs });
+        res.render('jobs', { search:"", jobs, totalCount });
     });
 
     // Search with posted details the jobs.
     app.post('/jobs', async (req, res) => {
-        const jobs = await searchJobs(req.body.search);
-        res.render('jobs', { jobs });
+        const [jobs, totalCount] = await searchJobs(req.body.search);
+        res.render('jobs', { search:req.body.search, jobs, totalCount });
     });
 
     // TODO register page

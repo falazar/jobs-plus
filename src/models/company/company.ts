@@ -1,9 +1,9 @@
 import {getModelForClass, modelOptions, prop} from "@typegoose/typegoose";
 import * as mongoose from "mongoose";
+import {TimeStamps} from "@typegoose/typegoose/lib/defaultClasses";
 
 @modelOptions({options: {customName: 'company'}})
-export class CompanyClass {
-    @prop()
+export class CompanyClass extends TimeStamps {
     _id: mongoose.Types.ObjectId
 
     @prop()

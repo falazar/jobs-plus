@@ -7,13 +7,13 @@ import {Company} from "../models/company/company";
 /***
  * Cronjob: Scrape a set of urls from indeed and save all as new jobs to our db.
 
+ From Command Line:
+     node -e 'require("./build/cronjobs/indeed_search_scraper").run()'
  */
 
-// run().then()
-run().then()
 
 
-async function run() {
+export async function run() {
     // Connect to MongoDB
     await mongoose.connect('mongodb://localhost:27017/', {dbName: 'test'});
 
@@ -47,7 +47,7 @@ async function run() {
     //     }
     // ]
     // await saveNewJobs(testJobs)
-    process.exit() // todo move up???
+    // process.exit()
 }
 
 async function scrapeIndeedPage(indeedUrl: string) {
@@ -214,12 +214,14 @@ async function saveNewCompanies(companyNames: string[]) {
 
     const companies: any[] = []
     companyNames.forEach((company) => {
-        companies.push({ _id: new mongoose.Types.ObjectId(),
-            name: company })
+        companies.push({
+            _id: new mongoose.Types.ObjectId(),
+            name: company
+        })
     })
 
     // Step 2: Call to query to find dupes.
-    const knownCompanies = await Company.find({ name: { $in: companyNames } })
+    const knownCompanies = await Company.find({name: {$in: companyNames}})
     const knownCompanyNames = knownCompanies.map((company) => company.name)
 
     // Step 3:  Remove those from this list.
