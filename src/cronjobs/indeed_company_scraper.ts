@@ -30,12 +30,12 @@ async function scrapeIndeedCompanyPage(companyUrl: string) {
     // tslint:disable-next-line:no-console
     console.log("Indeed scrape starting... company url=", companyUrl)
     // const browser = await puppeteer.launch({headless: true});
-    const browser = await puppeteer.launch({headless: false});
-    // NOTE: May only work as headless false...
-    const page = await browser.newPage();
-    await page.setViewport({width: 1920, height: 926});
-    await page.goto(companyUrl);
-    const data = await page.content()
+    // const browser = await puppeteer.launch({headless: false});
+    // // NOTE: May only work as headless false...
+    // const page = await browser.newPage();
+    // await page.setViewport({width: 1920, height: 926});
+    // await page.goto(companyUrl);
+    // const data = await page.content()
 
     // Manually scrape instead and find our data points.
 

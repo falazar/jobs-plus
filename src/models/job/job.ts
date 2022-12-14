@@ -3,7 +3,7 @@ import {CompanyClass, loadCompanies} from "../company/company";
 import {getModelForClass, modelOptions, prop} from "@typegoose/typegoose";
 import {TimeStamps} from "@typegoose/typegoose/lib/defaultClasses";
 
-@modelOptions({ options: { customName: 'job' } })
+@modelOptions({options: {customName: 'job'}})
 export class JobClass extends TimeStamps {
     _id: mongoose.Types.ObjectId
 
@@ -12,49 +12,63 @@ export class JobClass extends TimeStamps {
 
     @prop()
     public companyId?: mongoose.Types.ObjectId
-
     @prop()
     public indeedJobKey?: string
-
     @prop()
     public link?: string
-
     @prop()
     public city?: string
     // TODO state?
 
     @prop()
     public salaryMin?: number
-
     @prop()
     public salaryMax?: number
-
     @prop()
     public description?: string
-
     @prop()
     public pubDate?: Date
-
-    // @prop()
-    // public createdAt?: Date
 
     // TEMP FIELDS FOR NOW
     @prop()
     public company?: string
 }
+
 export const Job = getModelForClass(JobClass)
 
 
 // Search for any jobs to display for them.
 // export async function searchJobs(search: string): Promise<JobClass[], number> {
-    export async function searchJobs(search: string): Promise<[JobClass[], number]> {
+export async function searchJobs(search: string): Promise<[JobClass[], number]> {
     // TODO 1. Filter all jobs by 2 weeks,
     const titleSearch = new RegExp(`.*${search}.*`, 'i')
     // tslint:disable-next-line:no-console
     console.log(titleSearch)
 
-    const jobs: JobClass[] = await Job.find({ title: titleSearch}).limit(10) // todo test
-    const totalCount: number = await Job.count({ title: titleSearch})// todo test
+    // todo test
+    // pull out the ors nicely
+    // { $and : [ { "title" : /.*Senior.*/i }, { "title" : { $not : /.*android.*/i } }, { "title" : { $not : /.*ios .*/i } } ] }
+// EmployeeName:{$regex: "Gu",$options:'i'}
+    const jobs: JobClass[] = await Job.find({
+        $and: [{title: titleSearch}, {
+            title: {
+                $not: {
+                    $regex: "(android|ios|front|golang|ruby|.net|drupal)",
+                    $options: 'i'
+                }
+            }
+        }]
+    }).limit(30)
+    const totalCount: number = await Job.count({
+        $and: [{title: titleSearch}, {
+            title: {
+                $not: {
+                    $regex: "(android|ios|front|golang|ruby|.net|drupal)",
+                    $options: 'i'
+                }
+            }
+        }]
+    })
 
     // TODO then 2. If not enough, redo filter by 4 weeks.
     // TODO then 3. Calc each score for job,
@@ -69,7 +83,7 @@ export const Job = getModelForClass(JobClass)
     // TODO cant return full company unless we do a reference or something??  hmmm just generic objects i guess.
     */
 
-    return [jobs, totalCount ];
+    return [jobs, totalCount];
 }
 
 

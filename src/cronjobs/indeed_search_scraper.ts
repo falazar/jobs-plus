@@ -8,7 +8,7 @@ import {Company} from "../models/company/company";
  * Cronjob: Scrape a set of urls from indeed and save all as new jobs to our db.
 
  From Command Line:
-     node -e 'require("./build/cronjobs/indeed_search_scraper").run()'
+ node -e 'require("./build/cronjobs/indeed_search_scraper").run()'
  */
 
 
@@ -18,11 +18,21 @@ export async function run() {
     await mongoose.connect('mongodb://localhost:27017/', {dbName: 'test'});
 
     // todo scrape sort by date each time
-    // https://www.indeed.com/jobs?q=Senior+Developer+%24160%2C000+educational&l=&vjk=b8eb73c6b42d6ab7
-    const url = 'https://www.indeed.com/jobs?q=Senior+Node+Developer+%24160%2C000&sc=0kf%3Aattr%28DSQF7%29jt%28fulltime%29%3B&vjk=52419135d72c995a';
-    // const url = 'https://www.indeed.com/jobs?q=Senior+Typescript+Developer+%24160%2C000&sc=0kf%3Aattr%28DSQF7%29jt%28fulltime%29%3B&vjk=52419135d72c995a';
+    // Choose randomly from a list or urls for now.
+    let urls = [
+        'https://www.indeed.com/jobs?q=Senior+Node+Developer+%24160%2C000&sc=0kf%3Aattr%28DSQF7%29jt%28fulltime%29%3B&sort=date&limit=50',
+        'https://www.indeed.com/jobs?q=Senior+Typescript+Developer+%24160%2C000&sc=0kf%3Aattr%28DSQF7%29jt%28fulltime%29%3B&sort=date&limit=50',
+        'https://www.indeed.com/jobs?q=senior+software+engineer+%24175%2C000&l=remote&sc=0kf%3Ajt%28fulltime%29occ%28EG6MP%29%3B&sort=date&limit=50' ,
+    ]
 
-    await scrapeIndeedPage(url)
+    urls = urls
+        .map(value => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value)
+    // tslint:disable-next-line:no-console
+    console.log("urls", urls)
+
+    await scrapeIndeedPage(urls[0])
 
 
     // TEST INSERT

@@ -52,6 +52,7 @@ async function run() {
         console.log(":15 Running IndeedSearchScraper...");
         IndeedSearchScraper.run()
     });
+    // todo change to once a day.
 
     cron.schedule("0 30 * * * *", () => {
         // tslint:disable-next-line:no-console

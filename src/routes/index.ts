@@ -3,6 +3,10 @@ import { searchJobs } from "../models/job/job";
 
 
 /*
+REF: https://www.indeed.com/advanced_search
+// https://www.indeed.com/jobs?as_and=senior+software+educational&as_phr=&as_any=&as_not=&as_ttl=senior&as_cmp=&jt=fulltime&st=&salary=160000&radius=100&l=Austin&fromage=any&limit=50&sort=&psf=advsrch&from=advancedsearch&vjk=e458ca6335b2b4e9
+// 50 results per page, can scrape super fast.
+
 DONE TODOLIST:
     DONE - Add a basic search.
     DONE - implement mongoose, and typegoose to connect to local mongodb.
@@ -10,7 +14,7 @@ DONE TODOLIST:
     DONE - Add an Indeed job list scraper.
     DONE - Add Salary Ranges to Job object.
     DONE - Fill out Job Class.
-
+    DONE - Add a cron ability to run daily.
 TODO
     Disable semicolons on the end.
     Disable console.log warning.
@@ -25,7 +29,6 @@ TODO
     How do we pass user id thru the site.
     Start basic testing.
     Do login part.
-    Add a cron ability to run daily.
     Add paging on search results.
     Show Company list.
 
