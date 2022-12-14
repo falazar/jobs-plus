@@ -10,13 +10,13 @@ export class CompanyClass {
     public name: string
 
     @prop()
-    public sector: string
+    public sector?: string
 
     @prop()
-    city: string
+    city?: string
 
     @prop()
-    state: string
+    state?: string
 }
 
 export const Company = getModelForClass(CompanyClass);

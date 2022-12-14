@@ -1,9 +1,10 @@
 import * as mongoose from 'mongoose'
 import {CompanyClass, loadCompanies} from "../company/company";
 import {getModelForClass, modelOptions, prop} from "@typegoose/typegoose";
+import {TimeStamps} from "@typegoose/typegoose/lib/defaultClasses";
 
 @modelOptions({ options: { customName: 'job' } })
-export class JobClass {
+export class JobClass extends TimeStamps {
     _id: mongoose.Types.ObjectId
 
     @prop()
@@ -17,6 +18,22 @@ export class JobClass {
 
     @prop()
     public link?: string
+
+    @prop()
+    public city?: string
+    // TODO state?
+
+    @prop()
+    public salaryMin?: number
+
+    @prop()
+    public salaryMax?: number
+
+    @prop()
+    public pubDate?: Date
+
+    // @prop()
+    // public createdAt?: Date
 
     // TEMP FIELDS FOR NOW
     @prop()

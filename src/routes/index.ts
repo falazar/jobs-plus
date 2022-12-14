@@ -7,19 +7,22 @@ DONE TODOLIST:
     DONE - Add a basic search.
     DONE - implement mongoose, and typegoose to connect to local mongodb.
     DONE - Use ObjectId types, and proper return types.
-    DONE - Add an Indeed job scraper.
+    DONE - Add an Indeed job list scraper.
+    DONE - Add Salary Ranges to Job object.
 
 TODO
     Fill out Job Class.
     Fill out Company Class.
     Fill out User class.
     Start basic testing.
+    Do login part
     How do we pass user id thru the site.
     Add a cron ability to run daily.
+    Indeed Job Page scraper.
+    Indeed Company Page scraper
     Add paging on search results.
     Add userJobResponses to save user responding to a posting.
     Show Company list.
-    Add Salary Ranges to Job object.
     Filter by Salaries.
 
     Ref populate references - how scalable are the underlying queries?
