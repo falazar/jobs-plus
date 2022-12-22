@@ -22,12 +22,9 @@ export class CompanyClass extends TimeStamps {
 export const Company = getModelForClass(CompanyClass);
 
 
-// TODO later need to load by a list of ids
-export async function loadCompanies(): Promise<CompanyClass[]> {  // todo add return type
-    // const {_id: id} = await Company.create({name: 'JohnDoe', jobs: ['Cleaner']});
-    // const companies = await Company.findById(id).exec();
-    const companies = await Company.find({});
-
+// Given a list of company names load all company objects now.
+export async function loadCompanies(companyNames:string[]): Promise<CompanyClass[]> {
+    const companies = await Company.find({ name: { $in: companyNames } });
     return companies
 }
 

@@ -5,31 +5,100 @@
 <head>
     <meta charset="utf-8">
     <title>Jobs Page</title>
+    <script>
+        function toggleDetaiils(jobId) {
+            let el = document.getElementById(jobId + '-description')
+            if (el.style.display === 'none') {
+                el.style.display = 'block'
+            } else {
+                el.style.display = 'none'
+            }
+        }
+
+        function markSaved(jobId) {
+            fetch("/userJob/"+jobId+"/saved")
+            // TODO Color green.
+            let el = document.getElementById(jobId)
+            el.style.backgroundColor = '#99ff99'
+        }
+
+        function markUnwanted(jobId) {
+            fetch("/userJob/"+jobId+"/unwanted")
+            // Hide job or color red now to show unwanted.
+            let el = document.getElementById(jobId)
+            el.style.display = 'none'
+        }
+
+        <%
+        // Given a set of statuses show color.
+        function getJobColor(status) {
+            if (status === 'saved') {
+                return 'background-color: #99ff99'
+            }
+            else if (status === 'unwanted') {
+                return 'background-color: #ff9999'
+            }
+
+            return 'background-color: aquamarine'
+        }
+        %>
+    </script>
 </head>
 
-<body>
-<%- include('partials/header') %>
-<h1>Jobs Plus Results</h1>
 
-<form action="jobs" method="post">
-    Search: <input name="search">
-    <input type="submit" value="Search">
-</form>
+    <%- include('partials/header') %>
+    <h1>Jobs Plus Results</h1>
 
-All (<%= totalCount?.toLocaleString() %>) Found Jobs for title search: <%= search %>
-<% jobs.forEach((job, index)=> { %>
-    <h2>
-        <%= index + 1 %>. <%= job.title %>
-    </h2>
-    <p>
-        Company: <%= job.company %> - todo sector
-        Link: <a href="<%= job.link %>" target="_blank">LINK</a> -
-        Salary: $<%= job.salaryMin?.toLocaleString() %> to $<%= job.salaryMax?.toLocaleString() %> yearly.
-    </p>
-<% }) %>
+    <form action="jobs" method="post">
+        Search: <input name="search">
+        <input type="submit" value="Search">
+    </form>
 
+    All (<%= totalCount?.toLocaleString() %>) Found Jobs for title search: <%= search %>
+    <% jobs.forEach((job, index)=> { %>
+        <!-- todo color code each job block -->
+        <div id="<%= job.id %>" style="width:50%; border: solid black; <%=getJobColor(job?.userJobStatus);%>;">
+            <h2>
+                <%= index + 1 %>. <%= job.title %>
+            </h2>
+            <table>
+                <tr valign="top">
+                    <td width="50%">
+                        <b> Company:</b> <%= job.company %> - <%= job?.companySector %> <br>
+                        <b> Link:</b> <a href="<%= job.link %>" target="_blank">Job Link</a> - <br>
+                        <b> Salary:</b> $<%= job.salaryMin?.toLocaleString() %> to
+                        $<%= job.salaryMax?.toLocaleString() %>
+                        yearly. <br>
+                        <b> Date: </b> <%= job.createdAt %><br>
+                        <br>
+                        <!-- optional areas... -->
+                        <b> Status: </b> <%= job?.userJobStatus %> <br>
+                        <a href="javascript:void(0)" onClick="applyNow('<%= job.id %>')">Apply Now</a> <br>
+                        <a href="javascript:void(0)" onClick="markSaved('<%= job.id %>')">Mark Saved</a> <br>
+                        <a href="javascript:void(0)" onClick="markUnwanted('<%= job.id %>')">Mark Unwanted</a> <br>
+                        <br>
 
-<%- include('partials/footer') %>
-</body>
+                    </td>
+                    <td width="50%">
+                        <!-- todo optionally hidden fields first?, click anywhere here to trigger show  -->
+                        <a href="javascript:void(0);" onClick="toggleDetaiils('<%= job.id %>')">
+                            Show Details</a>
+                            <div id="<%= job.id + '-description' %>" style="display: none">
+                                <%- job.description %>
+                            </div>
+
+                            <!-- todo add interaction buttons now -->
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        </div>
+        </div> <!-- hackup -->
+        <br>
+    <% }) %>
+
+    <%- include('partials/footer') %>
+    </body>
 
 </html>

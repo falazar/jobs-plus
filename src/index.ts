@@ -60,12 +60,6 @@ async function run() {
         IndeedJobScraper.run()
     });
 
-    cron.schedule("0 45 * * * *", () => {
-        // tslint:disable-next-line:no-console
-        console.log(":45 Running IndeedCompanyScraper...");
-        IndeedCompanyScraper.run()
-    });
-
 
 }
 

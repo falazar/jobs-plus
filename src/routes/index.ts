@@ -1,5 +1,6 @@
 import * as express from "express";
 import { searchJobs } from "../models/job/job";
+import { saveUserJob } from "../models/userJob/userJob";
 
 
 /*
@@ -62,6 +63,22 @@ export const register = async (app: express.Application) => {
     // TODO register page
     // TODO login page
     // TODO search area.
+
+    // app.get('/userJob', async (req, res) => {
+    app.get('/userJob/:jobId/:status', async (req, res) => {
+        // tslint:disable-next-line:no-console
+        console.log("saving req.params = "+req.params.jobId)
+
+        await saveUserJob(req.params.jobId, req.params.status)
+
+        // app.get('/users/:userId/books/:bookId', (req, res) => {
+            res.send(req.params)
+        // })
+
+        // test
+        // res.render('about' )
+    });
+
 
     // About page
     app.get("/about", (req: any, res) => {
