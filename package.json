@@ -26,7 +26,8 @@
     "node-cron": "^3.0.2",
     "node-mailer": "^0.1.1",
     "nodemailer": "^6.8.0",
-    "puppeteer": "^19.4.0"
+    "puppeteer": "^19.4.0",
+    "puppeteer-core": "^19.4.1"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",

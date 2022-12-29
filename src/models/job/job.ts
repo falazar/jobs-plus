@@ -13,8 +13,13 @@ export class JobClass extends TimeStamps {
 
     @prop()
     public companyId?: mongoose.Types.ObjectId
+
+    @prop()
+    public sourceSite?: string
     @prop()
     public indeedJobKey?: string
+    @prop()
+    public linkedinJobKey?: string
     @prop()
     public link?: string
     @prop()
@@ -49,36 +54,43 @@ export const Job = getModelForClass(JobClass)
 export async function searchJobs(search: string): Promise<[JobClass[], number]> {
     // STEP 1. Filter all jobs by 2 weeks,
     const titleSearch = new RegExp(`.*${search}.*`, 'i')
+    // tslint:disable-next-line:no-console
+    // console.log('titleSearch: ', JSON.stringify(titleSearch))
+
     const filters = {
-        // HARD Code remove a set of keywords from job titles.
-        $and: [{title: titleSearch}, {
-            title: {
-                $not: {
-                    $regex: "(android|ios|front|golang|ruby|.net|drupal)",
-                    $options: 'i'
-                }
+        $and: [
+            {title: titleSearch},
+            {
+                title:
+                    {$not: {$regex: /(android|ios|front|golang|ruby|Ruby|.net|drupal)/i}}
             }
-        }]
+        ]
     }
 
-    let jobs: JobClass[] = await Job.find({filters})
+
+    // tslint:disable-next-line:no-console
+    console.log('filters: ', JSON.stringify(filters))
+
+    let jobs: JobClass[] = await Job.find(filters)
         .sort({createdAt: -1})
         .limit(30)
-    const totalCount: number = await Job.count({filters})
+    const totalCount: number = await Job.count(filters)
 
     // TODO Filter out userJobStatus ones we dont need to see.
     // STEP 2X. Join up with userJob to get status if available.
     jobs = await addUserJobStatus(jobs)
     // STEP 2. Load Companies associated and add to object.
     jobs = await addCompanySector(jobs)
-    // addCompanySector()
 
 
-    // TODO STEP 3. If not enough, redo filter by 4 weeks.
+// tslint:disable-next-line:no-console
+    console.log('jobs: ', jobs.map((job) => job.title))
 
-    // TODO STEP 4. Calc each score for job.
+// TODO STEP 3. If not enough, redo filter by 4 weeks.
 
-    // TODO STEP 5. Sort and return paged results.
+// TODO STEP 4. Calc each score for job.
+
+// TODO STEP 5. Sort and return paged results.
 
 
     return [jobs, totalCount];

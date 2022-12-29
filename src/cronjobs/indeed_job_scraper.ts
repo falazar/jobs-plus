@@ -11,7 +11,7 @@ import {Company} from "../models/company/company";
  node -e 'require("./build/cronjobs/indeed_job_scraper").run()'
 
 
- TODO scrape missing sections on thiis one
+ TODO scrape missing sections on this one
  https://www.indeed.com/viewjob?jk=8a4a0ecfa5034fb0
  https://www.indeed.com/viewjob?jk=71bb10fedfae3555
  */
