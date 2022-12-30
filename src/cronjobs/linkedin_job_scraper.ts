@@ -30,7 +30,7 @@ export async function run() {
 
     for (const job of jobs) {
         const index = jobs.indexOf(job);
-        if (index > 3) {  // 19 was
+        if (index > 19) {
             continue;
         }
         await scrapeLinkedinJobPage(job.linkedinJobKey, index+1, browser)
@@ -74,7 +74,12 @@ async function scrapeLinkedinJobPage(linkedinJobKey: string, index: number, brow
     // Update job field here.
     job.description = "<div " + data3
 
-    // TODO Note: Salary is not broken out if not logged in properly, cant scrape.
+    // TODO Note: Salary is not broken out if not logged in properly, cant scrape all of them.
+    // Salary: $180k-$200k
+    // 3325860126
+    //
+    // $175,000 - $195,000 in listing.
+
 
 
     // tslint:disable-next-line:no-console

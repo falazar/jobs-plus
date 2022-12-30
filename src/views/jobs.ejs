@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <title>Jobs Page</title>
     <script>
-        function toggleDetaiils(jobId) {
+        function toggleDetails(jobId) {
             let el = document.getElementById(jobId + '-description')
             if (el.style.display === 'none') {
                 el.style.display = 'block'
@@ -70,6 +70,7 @@
                         $<%= job.salaryMax?.toLocaleString() %>
                         yearly. <br>
                         <b> Date: </b> <%= job.createdAt %><br>
+                        <b> Source: </b> <%= job.sourceSite %><br>
                         <br>
                         <!-- optional areas... -->
                         <b> Status: </b> <%= job?.userJobStatus %> <br>
@@ -81,7 +82,7 @@
                     </td>
                     <td width="50%">
                         <!-- todo optionally hidden fields first?, click anywhere here to trigger show  -->
-                        <a href="javascript:void(0);" onClick="toggleDetaiils('<%= job.id %>')">
+                        <a href="javascript:void(0);" onClick="toggleDetails('<%= job.id %>')">
                             Show Details</a>
                             <div id="<%= job.id + '-description' %>" style="display: none">
                                 <%- job.description %>

@@ -23,6 +23,7 @@ export async function run() {
 
     // Pull up the last 5-10 jobs that are not scraped yet and process them.
     const jobs: JobClass[] = await Job.find({
+        sourceSite: 'indeed',
         description: null
     }).sort({createdAt: "desc"})
     // tslint:disable-next-line:no-console
@@ -37,12 +38,13 @@ export async function run() {
         if (index > 19) {
             continue;
         }
-        await scrapeIndeedJobPage(job.indeedJobKey, index+1, browser)
+        await scrapeIndeedJobPage(job.indeedJobKey, index + 1, browser)
     }
 
     // TEST ONE
-    // const jobkey = "8a4a0ecfa5034fb0"
-    // await scrapeIndeedJobPage(jobkey, 1, browser)
+    const jobkey = "adb2786f6ca22013"
+    // https://www.indeed.com/viewjob?jk=2033ce18816dbd61
+    await scrapeIndeedJobPage(jobkey, 1, browser)
 
     // tslint:disable-next-line:no-console
     console.log("completed scraping all job pages");
@@ -56,7 +58,7 @@ async function scrapeIndeedJobPage(indeedJobKey: string, index: number, browser:
     const jobUrl = job.link
 
     // tslint:disable-next-line:no-console
-    console.log(index+ ". Indeed scrape starting... job url=", jobUrl)
+    console.log(index + ". Indeed scrape starting... job url=", jobUrl)
 
     const page = await browser.newPage();
     await page.setViewport({width: 1920, height: 926});
@@ -74,17 +76,18 @@ async function scrapeIndeedJobPage(indeedJobKey: string, index: number, browser:
     // Update job field here.
     job.description = "<h2" + data2
 
-    // Qualifications sometimes has.
-    const regex2 = />(Qualifications<.*?)<h2/ms;
+    // Get Estimated salary
+    // $147K - $187K a year
+    const regex2 = />\$(\d+)K - \$(\d+)K a year/ims;
     const matches2 = data.match(regex2);
-    const data3 = matches2?.[0]
-    // tslint:disable-next-line:no-console
-    // console.log('data3', data3)
-    if (data3) {
-        // Update job field here.
-        job.qualifications = "<h2" + data3
-    }
+    // Update job fields here.
+    if (matches2) {
+        // tslint:disable-next-line:no-console
+        console.log('matches2=', matches2[1], matches2[2])
 
+        job.salaryMin = parseInt(matches2[1], 10) * 1000
+        job.salaryMax = parseInt(matches2[2], 10) * 1000
+    }
 
     await job.save()
 }

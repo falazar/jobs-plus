@@ -76,7 +76,7 @@ async function scrapeLinkedindPage(indeedUrl: string) {
     const rows = data.split(/<div class="base-card relative/i);
     // console.log('row 0', rows[0])
     // tslint:disable-next-line:no-console
-    console.log('rows', rows)
+    // console.log('rows', rows)
     // tslint:disable-next-line:no-console
     console.log(rows.length)
     const jobs: any[] = []
@@ -87,7 +87,7 @@ async function scrapeLinkedindPage(indeedUrl: string) {
         // Grab out each important field.
         const company = row.match(/job-search-card-subtitle">\n* *(.*?)\n* *</ims)?.[1]
         // tslint:disable-next-line:no-console
-        console.log("company=" + company + "*")
+        console.log("\ncompany=" + company + "*")
 
         const title = row.match(/base-search-card__title">[ \n]*(.*?) *\n* *</ims)?.[1]
         // tslint:disable-next-line:no-console
@@ -115,6 +115,21 @@ async function scrapeLinkedindPage(indeedUrl: string) {
         // tslint:disable-next-line:no-console
         console.log("location =" + location + "*")
 
+        // $175,000 - $195,000 in listing.
+        const regex2 = />\$(\d+),000 - \$(\d+),000/ims;
+        const matches2 = row.match(regex2);
+        // Update job fields here.
+        let salaryMin = null
+        let salaryMax = null
+        if (matches2) {
+            // tslint:disable-next-line:no-console
+            console.log('salary matches2=', matches2[1], matches2[2])
+
+            salaryMin = parseInt(matches2[1], 10) * 1000
+            salaryMax = parseInt(matches2[2], 10) * 1000
+        }
+
+
         // Add an object to our array.
         if (jobKey) {
             const job = {
@@ -126,6 +141,8 @@ async function scrapeLinkedindPage(indeedUrl: string) {
                 city: location,
                 pubDate,
                 link: "https://www.linkedin.com/jobs/view/" + jobKey,
+                salaryMin,
+                salaryMax
             }
             jobs.push(job)
         }

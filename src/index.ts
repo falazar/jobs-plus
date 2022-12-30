@@ -8,7 +8,8 @@ import * as mongoose from 'mongoose'
 import * as cron from "node-cron"
 import * as IndeedSearchScraper from "./cronjobs/indeed_search_scraper";
 import * as IndeedJobScraper from "./cronjobs/indeed_job_scraper";
-import * as IndeedCompanyScraper from "./cronjobs/indeed_company_scraper";
+import * as LinkedinSearchScraper from "./cronjobs/linkedin_search_scraper";
+import * as LinkedinJobScraper from "./cronjobs/linkedin_job_scraper";
 
 
 // TODO
@@ -51,14 +52,16 @@ async function run() {
         // tslint:disable-next-line:no-console
         console.log(":15 Running IndeedSearchScraper...");
         IndeedSearchScraper.run()
+        LinkedinSearchScraper.run()
     });
-    // todo change to once a day.
 
     cron.schedule("0 30 * * * *", () => {
         // tslint:disable-next-line:no-console
         console.log(":30 Running IndeedJobScraper...");
         IndeedJobScraper.run()
+        LinkedinJobScraper.run()
     });
+
 
 
 }

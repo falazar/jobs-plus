@@ -1,0 +1,104 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Applications Page</title>
+    <script>
+        <!-- todo change all these. -->
+        function toggleDetails(jobId) {
+            let el = document.getElementById(jobId + '-description')
+            if (el.style.display === 'none') {
+                el.style.display = 'block'
+            } else {
+                el.style.display = 'none'
+            }
+        }
+
+        function markSaved(jobId) {
+            fetch("/userJob/" + jobId + "/saved")
+            // TODO Color green.
+            let el = document.getElementById(jobId)
+            el.style.backgroundColor = '#99ff99'
+        }
+
+        function markUnwanted(jobId) {
+            fetch("/userJob/" + jobId + "/unwanted")
+            // Hide job or color red now to show unwanted.
+            let el = document.getElementById(jobId)
+            el.style.display = 'none'
+        }
+
+        <%
+        // Given a set of statuses show color.
+        function getJobColor(status) {
+            if (status === 'saved') {
+                return 'background-color: #99ff99'
+            } else if (status === 'unwanted') {
+                return 'background-color: #ff9999'
+            }
+
+            return 'background-color: aquamarine'
+        }
+        %>
+    </script>
+</head>
+
+
+<%- include('partials/header') %>
+<h1>Applications Plus Results</h1>
+
+All your current applications:
+
+<%
+    // TODO fix on zero errors.
+if (applications.length > 0)
+applications.forEach((application, index)=> {
+    const job = application.job
+%>
+<!-- todo color code each  block -->
+<div id="<%= application.id %>" style="width:50%; border: solid black; <%= getJobColor(job?.userJobStatus); %>;">
+    <h2>
+        <%= index + 1 %>. <%= application?.job.title %>
+    </h2>
+    <table>
+        <tr valign="top">
+            <td width="50%">
+                <b> Company:</b> <%= job?.company %> - <%= job?.companySector %> <br>
+                <b> Link:</b> <a href="<%= job?.link %>" target="_blank">Job Link</a> - <br>
+                <b> Salary:</b> $<%= job.salaryMin?.toLocaleString() %> to
+                $<%= job.salaryMax?.toLocaleString() %>
+                yearly. <br>
+                <b> Date: </b> <%= job.createdAt %><br>
+                <br>
+                <!-- optional areas... -->
+                <b> Application Sent on: </b> <%= application?.applicationDate %> <br>
+                <b> Status: </b> <%= application?.status %> <br>
+                <!-- todo menu items -->
+                <br>
+
+            </td>
+            <td width="50%">
+                <!-- todo optionally hidden fields first?, click anywhere here to trigger show  -->
+                <a href="javascript:void(0);" onClick="toggleDetails('<%= job.id %>')">
+                    Show Details</a>
+                <div id="<%= job.id + '-description' %>" style="display: none">
+                    <%- job.description %>
+                </div>
+
+                <!-- todo add interaction buttons now -->
+            </td>
+        </tr>
+    </table>
+
+</div>
+</div>
+</div> <!-- hackup -->
+<br>
+<% }) %>
+
+<%- include('partials/footer') %>
+</body>
+
+</html>

@@ -50,24 +50,32 @@ export const Job = getModelForClass(JobClass)
 
 
 // Search for any jobs to display for them.
-// export async function searchJobs(search: string): Promise<JobClass[], number> {
+// Search defaults to 25 results per page.
 export async function searchJobs(search: string): Promise<[JobClass[], number]> {
     // STEP 1. Filter all jobs by 2 weeks,
-    const titleSearch = new RegExp(`.*${search}.*`, 'i')
-    // tslint:disable-next-line:no-console
-    // console.log('titleSearch: ', JSON.stringify(titleSearch))
+    const searchRegex = new RegExp(`.*${search}.*`, 'i')
 
+    // todo pull out nots in titles.
+    const notInTitles = new Set(["android", "ios", "front", "golang", "ruby", "\.net", "drupal"])
+    const notTitleWords = Array.from(notInTitles).join("|")
+    const notRegex = new RegExp(`(${notTitleWords})`, 'i')
+    // NOTE: Will match partial words here.
+    // tslint:disable-next-line:no-console
+    console.log('notRegex:', notRegex)
     const filters = {
         $and: [
-            {title: titleSearch},
             {
-                title:
-                    {$not: {$regex: /(android|ios|front|golang|ruby|Ruby|.net|drupal)/i}}
+                $or:
+                    [
+                        {title: searchRegex},
+                        {description: searchRegex},
+                    ]
+            },
+            {
+                title: {$not: notRegex}
             }
         ]
     }
-
-
     // tslint:disable-next-line:no-console
     console.log('filters: ', JSON.stringify(filters))
 
@@ -76,24 +84,41 @@ export async function searchJobs(search: string): Promise<[JobClass[], number]> 
         .limit(30)
     const totalCount: number = await Job.count(filters)
 
-    // TODO Filter out userJobStatus ones we dont need to see.
-    // STEP 2X. Join up with userJob to get status if available.
+    // STEP 2. Join up with userJob to get status if available.
+    // and filter out userJobStatus ones we dont need to see.
     jobs = await addUserJobStatus(jobs)
-    // STEP 2. Load Companies associated and add to object.
+    // STEP 3. Load Companies associated and add to object.
     jobs = await addCompanySector(jobs)
 
 
-// tslint:disable-next-line:no-console
-    console.log('jobs: ', jobs.map((job) => job.title))
+    // tslint:disable-next-line:no-console
+    // console.log('jobs: ', jobs.map((job) => job.title))
 
-// TODO STEP 3. If not enough, redo filter by 4 weeks.
+    // STEP 4: If not enough, redo filter by 4 weeks.
+    if (jobs.length < 25) {
+        // tslint:disable-next-line:no-console
+        console.log('Redoing query to get more jobs, we had count='+jobs.length)
+        // TODO MAKE METHOD.
+        jobs = await Job.find(filters)
+            .sort({createdAt: -1})
+            .limit(90)
 
-// TODO STEP 4. Calc each score for job.
+        // STEP 2. Join up with userJob to get status if available.
+        // and filter out userJobStatus ones we dont need to see.
+        jobs = await addUserJobStatus(jobs)
+        // STEP 3. Load Companies associated and add to object.
+        jobs = await addCompanySector(jobs)
 
-// TODO STEP 5. Sort and return paged results.
+        // tslint:disable-next-line:no-console
+        console.log('new count='+jobs.length)
+    }
 
+// TODO STEP 5: Calc each score for job.
 
-    return [jobs, totalCount];
+// TODO STEP 6: Sort and return paged results.
+
+    // Return only 25 results.
+    return [jobs.slice(0, 25), totalCount];
 }
 
 // Add status and filter out if not wanted.
