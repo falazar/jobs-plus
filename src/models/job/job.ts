@@ -51,12 +51,13 @@ export const Job = getModelForClass(JobClass)
 
 // Search for any jobs to display for them.
 // Search defaults to 25 results per page.
-export async function searchJobs(search: string): Promise<[JobClass[], number]> {
+export async function searchJobs(search: string, salaryMin: number): Promise<[JobClass[], number]> {
     // STEP 1. Filter all jobs by 2 weeks,
     const searchRegex = new RegExp(`.*${search}.*`, 'i')
 
     // todo pull out nots in titles.
-    const notInTitles = new Set(["android", "ios", "front", "golang", "ruby", "\.net", "drupal"])
+    const notInTitles = new Set(["android", "ios", "front", "golang", "ruby", "\.net", "drupal", "president", "vp"])
+
     const notTitleWords = Array.from(notInTitles).join("|")
     const notRegex = new RegExp(`(${notTitleWords})`, 'i')
     // NOTE: Will match partial words here.
@@ -73,6 +74,9 @@ export async function searchJobs(search: string): Promise<[JobClass[], number]> 
             },
             {
                 title: {$not: notRegex}
+            },
+            {
+                salaryMin: {$gte: salaryMin}
             }
         ]
     }
@@ -113,9 +117,10 @@ export async function searchJobs(search: string): Promise<[JobClass[], number]> 
         console.log('new count='+jobs.length)
     }
 
-// TODO STEP 5: Calc each score for job.
+    // TODO STEP 5: Calc each score for job.
 
-// TODO STEP 6: Sort and return paged results.
+    // TODO STEP 6: Sort and return paged results.
+
 
     // Return only 25 results.
     return [jobs.slice(0, 25), totalCount];

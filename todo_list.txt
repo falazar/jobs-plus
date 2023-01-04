@@ -15,25 +15,29 @@ DONE TODOLIST:
     DONE - Indeed Job Page scraper.
     not needed - Indeed Company Page scraper
     DONE - Create applications page.
+    DONE - LinkedIn scrapers
 
 
 TODO
-    1/2 LinkedIn scrapers
+    Job Filter by Salaries.
+    Job Filter OUT multiple job keywords. advanced search
     Disable semicolons on the end.
     Disable console.log warning.
     1/2 Add userJobResponses to save user responding to a posting.
-    Job Filter by Salaries.
     Job Filter on multiple job titles.
-    Job Filter OUT multiple job keywords.
     Fill out Company Class.
+        Company List editor - edit to add sector on.
+        Show Company list.
+        exclude companies we dont want to see.
     Fill out User class.
     How do we pass user id thru the site.
-    Start basic testing.
+    Start basic code testing.
     Do login part.
     Add paging on search results.
-    Company List editor - add sector on.
-    Show Company list.
     Export or print page to file Unemployment, with Texas as an example.
+    Show stats, like avg salary for jobs per day, excluding ones we dont want.
+    Show stats - how many jobs for each language, java, node, javascript, python, php and salary ranges?
+
 
     Ref populate references - how scalable are the underlying queries?
     https://stackoverflow.com/questions/64560563/typegoose-find-on-model-does-not-return-reference-array-fields

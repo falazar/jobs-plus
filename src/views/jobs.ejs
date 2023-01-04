@@ -17,7 +17,6 @@
 
         function markSaved(jobId) {
             fetch("/userJob/"+jobId+"/saved")
-            // TODO Color green.
             let el = document.getElementById(jobId)
             el.style.backgroundColor = '#99ff99'
         }
@@ -29,11 +28,20 @@
             el.style.display = 'none'
         }
 
+        function appliedNow(jobId) {
+            fetch("/userJob/"+jobId+"/applied")
+            let el = document.getElementById(jobId)
+            el.style.backgroundColor = '#99ff99'
+        }
+
         <%
         // Given a set of statuses show color.
         function getJobColor(status) {
             if (status === 'saved') {
                 return 'background-color: #99ff99'
+            }
+            else if (status === 'applied') {
+                return 'background-color: #66ff66'
             }
             else if (status === 'unwanted') {
                 return 'background-color: #ff9999'
@@ -50,11 +58,12 @@
     <h1>Jobs Plus Results</h1>
 
     <form action="jobs" method="post">
-        Search: <input name="search">
+        Search keyword: <input name="search" value="<%=search%>">
+        Min salary: <input name="salaryMin" value="<%=salaryMin%>">
         <input type="submit" value="Search">
     </form>
 
-    All (<%= totalCount?.toLocaleString() %>) Found Jobs for title search: <%= search %>
+    All (<%= totalCount?.toLocaleString() %>) Found Jobs for search: <%= search %>
     <% jobs.forEach((job, index)=> { %>
         <!-- todo color code each job block -->
         <div id="<%= job.id %>" style="width:50%; border: solid black; <%=getJobColor(job?.userJobStatus);%>;">
@@ -66,15 +75,20 @@
                     <td width="50%">
                         <b> Company:</b> <%= job.company %> - <%= job?.companySector %> <br>
                         <b> Link:</b> <a href="<%= job.link %>" target="_blank">Job Link</a> - <br>
-                        <b> Salary:</b> $<%= job.salaryMin?.toLocaleString() %> to
+                        <b> Salary:</b>
+                        <% if (!job.salaryMin) { %>
+                            Unknown <br>
+                        <% } else { %>
+                        $<%= job.salaryMin?.toLocaleString() %> to
                         $<%= job.salaryMax?.toLocaleString() %>
                         yearly. <br>
+                        <% } %>
                         <b> Date: </b> <%= job.createdAt %><br>
                         <b> Source: </b> <%= job.sourceSite %><br>
                         <br>
                         <!-- optional areas... -->
                         <b> Status: </b> <%= job?.userJobStatus %> <br>
-                        <a href="javascript:void(0)" onClick="applyNow('<%= job.id %>')">Apply Now</a> <br>
+                        <a href="javascript:void(0)" onClick="appliedNow('<%= job.id %>')">Applied Now</a> <br>
                         <a href="javascript:void(0)" onClick="markSaved('<%= job.id %>')">Mark Saved</a> <br>
                         <a href="javascript:void(0)" onClick="markUnwanted('<%= job.id %>')">Mark Unwanted</a> <br>
                         <br>

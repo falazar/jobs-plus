@@ -17,12 +17,14 @@ export class ApplicationClass extends TimeStamps {
     public status: string
 
     @prop()
-    public job: JobClass
-
-    @prop()
     public applicationDate: Date
 
-    // set of fields related to a user appllying to a job.
+    // Extra objects.
+    // @prop()
+    public job?: JobClass
+    // public jobObject?: JobClass
+
+    // set of fields related to a user applying to a job.
     // including contact people and emails.
     // and list of events related to this application - such as interview
     // and current status.
@@ -38,12 +40,12 @@ export const Application = getModelForClass(ApplicationClass);
 
 export async function findAll(userId: mongoose.Types.ObjectId): Promise<[ApplicationClass[], number]> {
     const filters = {
-        // status: "applying"
+        // status: "applied"
         // Any status not rejected, stopped
         userId
     }
     let applications: ApplicationClass[] = await Application.find(filters)
-        .sort({createdAt: -1})
+        .sort({applicationDate: 1})
         .limit(50)
     const totalCount: number = await Application.count(filters)
 
@@ -60,7 +62,6 @@ export async function addJobs(applications: ApplicationClass[]) {
 
     // Loop over each application and add job data.
     for (const application of applications) {
-        // let index = applications.indexOf(application);
 
         // tslint:disable-next-line:no-console
         console.log("Checking application now...:", application.jobId)

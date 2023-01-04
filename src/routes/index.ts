@@ -14,14 +14,14 @@ export const register = async (app: express.Application) => {
 
     // Jobs page, on first land, show all...
     app.get('/jobs', async (req, res) => {
-        const [jobs, totalCount] = await searchJobs("");
-        res.render('jobs', {search: "", jobs, totalCount});
+        const [jobs, totalCount] = await searchJobs("", 0);
+        res.render('jobs', {search: "", salaryMin: 0, jobs, totalCount});
     });
 
     // Search with posted details the jobs.
     app.post('/jobs', async (req, res) => {
-        const [jobs, totalCount] = await searchJobs(req.body.search);
-        res.render('jobs', {search: req.body.search, jobs, totalCount});
+        const [jobs, totalCount] = await searchJobs(req.body.search, req.body.salaryMin);
+        res.render('jobs', {search: req.body.search, salaryMin: req.body.salaryMin, jobs, totalCount});
     });
 
     // TODO register page

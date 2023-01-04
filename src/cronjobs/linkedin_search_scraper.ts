@@ -116,7 +116,7 @@ async function scrapeLinkedindPage(indeedUrl: string) {
         console.log("location =" + location + "*")
 
         // $175,000 - $195,000 in listing.
-        const regex2 = />\$(\d+),000 - \$(\d+),000/ims;
+        const regex2 = />\$(\d+),000 *- *\$(\d+),000/ims;
         const matches2 = row.match(regex2);
         // Update job fields here.
         let salaryMin = null

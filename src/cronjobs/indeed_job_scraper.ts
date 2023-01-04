@@ -27,27 +27,28 @@ export async function run() {
         description: null
     }).sort({createdAt: "desc"})
     // tslint:disable-next-line:no-console
-    console.log('jobs count ', jobs.length)
+    console.log('indeed jobs count ', jobs.length)
 
     // const browser = await puppeteer.launch({headless: true});
     const browser = await puppeteer.launch({headless: false});
     // NOTE: May only work as headless false...
 
+    // TEST ONE
+    // const jobkey = "adb2786f6ca22013"
+    // https://www.indeed.com/viewjob?jk=2033ce18816dbd61
+    // await scrapeIndeedJobPage(jobkey, 1, browser)
+
     for (const job of jobs) {
         const index = jobs.indexOf(job);
         if (index > 19) {
-            continue;
+            break;
         }
         await scrapeIndeedJobPage(job.indeedJobKey, index + 1, browser)
     }
 
-    // TEST ONE
-    const jobkey = "adb2786f6ca22013"
-    // https://www.indeed.com/viewjob?jk=2033ce18816dbd61
-    await scrapeIndeedJobPage(jobkey, 1, browser)
 
     // tslint:disable-next-line:no-console
-    console.log("completed scraping all job pages");
+    console.log("completed scraping all indeed job pages");
 }
 
 // Given a job key and browser puppeteer, grab our data now.

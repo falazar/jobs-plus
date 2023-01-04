@@ -94,7 +94,7 @@ async function scrapeIndeedPage(indeedUrl: string) {
     const jobs: any[] = []
     rows.forEach((row, index) => {
         // tslint:disable-next-line:no-console
-        console.log("\n\n\nRow " + index + "= ", row)
+        // console.log("\n\n\nRow " + index + "= ", row)
         // Grab out each important field
         // "company": "Cygnet Global Resources",
         const company = row.match(/company":"(.*?)"/)?.[1]
@@ -179,11 +179,11 @@ async function scrapeIndeedPage(indeedUrl: string) {
     })
 
     // tslint:disable-next-line:no-console
-    console.log("jobs list: ", jobs)
+    console.log("indeed jobs list: ", jobs)
     await saveNewJobs(jobs)
 
     // tslint:disable-next-line:no-console
-    console.log("completed scraping");
+    console.log("completed indeed scraping");
 }
 
 
