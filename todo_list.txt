@@ -16,10 +16,15 @@ DONE TODOLIST:
     not needed - Indeed Company Page scraper
     DONE - Create applications page.
     DONE - LinkedIn scrapers
+    DONE - Reformat all applications page to look like spreadsheet
 
 
 TODO
     Job Filter by Salaries.
+    Add applicationAction object and allow new creation
+    Allow manual creation of job, (for outside sourced ones)
+
+
     Job Filter OUT multiple job keywords. advanced search
     Disable semicolons on the end.
     Disable console.log warning.

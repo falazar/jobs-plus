@@ -49,55 +49,98 @@
 <%- include('partials/header') %>
 <h1>Applications Plus Results</h1>
 
-All your current (<%= applications.length %>) applications:
+All your current (<%= applications.length %>) applications: <br>
 
-<%
-    // TODO fix on zero errors.
-if (applications.length > 0)
-applications.forEach((application, index)=> {
-    const job = application.job
-%>
-<!-- todo color code each  block -->
-<div id="<%= application.id %>" style="width:50%; border: solid black; <%= getJobColor(job?.userJobStatus); %>;">
-    <h2>
-        <%= index + 1 %>. <%= application?.job.title %>
-    </h2>
-    <table>
-        <tr valign="top">
-            <td width="50%">
-                <b> Company:</b> <%= job?.company %> - <%= job?.companySector %> <br>
-                <b> Link:</b> <a href="<%= job?.link %>" target="_blank">Job Link</a> - <br>
-                <b> Salary:</b> $<%= job.salaryMin?.toLocaleString() %> to
-                $<%= job.salaryMax?.toLocaleString() %>
-                yearly. <br>
-                <b> Date: </b> <%= job.createdAt %><br>
-                <br>
-                <!-- optional areas... -->
-                <b> Application Sent on: </b> <%= application?.applicationDate %> <br>
-                <!-- todo calc how long since application -->
-                <b> Status: </b> <%= application?.status %> <br>
-                <!-- todo menu items -->
-                <br>
 
-            </td>
-            <td width="50%">
-                <!-- todo optionally hidden fields first?, click anywhere here to trigger show  -->
-                <a href="javascript:void(0);" onClick="toggleDetails('<%= job.id %>')">
-                    Show Details</a>
-                <div id="<%= job.id + '-description' %>" style="display: none">
-                    <%- job.description %>
-                </div>
+<style>
+    th {
+        background-color: deepskyblue;
+        border: 1px solid black;
+        font-weight: bold;
+    }
 
-                <!-- todo add interaction buttons now -->
-            </td>
-        </tr>
-    </table>
+    td {
+        border: 1px solid black;
+    }
 
-</div>
-</div>
-</div> <!-- hackup -->
-<br>
-<% }) %>
+    tr:nth-child(even) {
+        background-color: lightgrey;
+    }
+
+    table {
+        border-collapse: collapse;
+    }
+</style>
+
+<!--TODO setup filters to only show current job applications-->
+
+<table>
+    <tr>
+        <th> Num</th>
+        <th> Applied Date</th>
+        <th> Status</th>
+        <th> Actions</th>
+        <th> Title</th>
+        <th> Company</th>
+        <th> Market</th>
+        <th> Main Tech</th>
+        <th> Salary</th>
+        <th> Location</th>
+        <th> Remote?</th>
+        <th> Interview Date</th>
+        <th> Site found</th>
+        <th> Notes</th>
+        <th> Job Url</th>
+    </tr>
+
+    <%
+    applications.forEach((application, index)=> {
+        const job = application.job
+    %>
+    <tr valign="top">
+        <td> <%= index+1 %>.</td>
+        <td>
+            <%
+                var date = application?.applicationDate.toISOString().split('T')[0]
+            %>
+            <%= date %>
+        </td>
+        <td> <%= application?.status %>
+            <!--            TODO pull down changable list here for statuses-->
+        </td>
+        <td>
+            <!--            TODO buttons for adding actiions-->
+        </td>
+        <td> <%= job?.title %>
+
+            <a href="javascript:void(0);" onClick="toggleDetails('<%= job.id %>')">
+                Show Details</a>
+            <div id="<%= job.id + '-description' %>" style="display: none">
+                <%- job.description %>
+            </div>
+
+        </td>
+        <td> <%= job?.company %> </td>
+        <td> <%= job?.companySector %> </td>
+        <td></td>
+        <td>
+            <nobr> $<%= job.salaryMin?.toLocaleString() %> to $<%= job.salaryMax?.toLocaleString() %> </nobr>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td> Notes:</td>
+        <td><a href="<%= job?.link %>" target="_blank">Job Link</a></td>
+        <!--        todo link or popout to full job desc -->
+    </tr>
+
+    <!-- todo loop over any applicationActions now to show full history. -->
+
+    <%
+    })
+    %>
+</table>
 
 <%- include('partials/footer') %>
 </body>

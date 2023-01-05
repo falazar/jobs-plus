@@ -51,7 +51,7 @@ export const Job = getModelForClass(JobClass)
 
 // Search for any jobs to display for them.
 // Search defaults to 25 results per page.
-export async function searchJobs(search: string, salaryMin: number): Promise<[JobClass[], number]> {
+export async function searchJobs(search: string, salaryMin: number, appliedFilter: boolean, unwantedFilter: boolean): Promise<[JobClass[], number]> {
     // STEP 1. Filter all jobs by 2 weeks,
     const searchRegex = new RegExp(`.*${search}.*`, 'i')
 
@@ -90,7 +90,7 @@ export async function searchJobs(search: string, salaryMin: number): Promise<[Jo
 
     // STEP 2. Join up with userJob to get status if available.
     // and filter out userJobStatus ones we dont need to see.
-    jobs = await addUserJobStatus(jobs)
+    jobs = await addUserJobStatus(jobs, appliedFilter, unwantedFilter)
     // STEP 3. Load Companies associated and add to object.
     jobs = await addCompanySector(jobs)
 
@@ -109,7 +109,7 @@ export async function searchJobs(search: string, salaryMin: number): Promise<[Jo
 
         // STEP 2. Join up with userJob to get status if available.
         // and filter out userJobStatus ones we dont need to see.
-        jobs = await addUserJobStatus(jobs)
+        jobs = await addUserJobStatus(jobs, appliedFilter, unwantedFilter)
         // STEP 3. Load Companies associated and add to object.
         jobs = await addCompanySector(jobs)
 
@@ -127,7 +127,7 @@ export async function searchJobs(search: string, salaryMin: number): Promise<[Jo
 }
 
 // Add status and filter out if not wanted.
-export async function addUserJobStatus(jobs: JobClass[]) {
+export async function addUserJobStatus(jobs: JobClass[], appliedFilter: boolean, unwantedFilter: boolean) {
     const jobIds = jobs.map((job) => job._id)
     const userId = new mongoose.Types.ObjectId('1'.repeat(24))  // hard coded for testing.
     const userJobs: UserJobClass[] = await UserJob.find({jobId: {$in: jobIds}, userId})
@@ -137,8 +137,14 @@ export async function addUserJobStatus(jobs: JobClass[]) {
         job.userJobStatus = userJobs.find((userJob) => userJob.jobId.toString() === job._id.toString())?.status
     })
 
-    // Remove already unwanted jobs.
-    jobs = jobs.filter((job) => job.userJobStatus !== 'unwanted')
+    if (!appliedFilter) {
+        // Remove already applied to jobs.
+        jobs = jobs.filter((job) => job.userJobStatus !== 'applied')
+    }
+    if (!unwantedFilter) {
+        // Remove already unwanted jobs.
+        jobs = jobs.filter((job) => job.userJobStatus !== 'unwanted')
+    }
 
     return jobs
 }

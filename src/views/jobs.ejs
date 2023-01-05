@@ -16,20 +16,20 @@
         }
 
         function markSaved(jobId) {
-            fetch("/userJob/"+jobId+"/saved")
+            fetch("/userJob/" + jobId + "/saved")
             let el = document.getElementById(jobId)
             el.style.backgroundColor = '#99ff99'
         }
 
         function markUnwanted(jobId) {
-            fetch("/userJob/"+jobId+"/unwanted")
+            fetch("/userJob/" + jobId + "/unwanted")
             // Hide job or color red now to show unwanted.
             let el = document.getElementById(jobId)
             el.style.display = 'none'
         }
 
         function appliedNow(jobId) {
-            fetch("/userJob/"+jobId+"/applied")
+            fetch("/userJob/" + jobId + "/applied")
             let el = document.getElementById(jobId)
             el.style.backgroundColor = '#99ff99'
         }
@@ -39,11 +39,9 @@
         function getJobColor(status) {
             if (status === 'saved') {
                 return 'background-color: #99ff99'
-            }
-            else if (status === 'applied') {
+            } else if (status === 'applied') {
                 return 'background-color: #66ff66'
-            }
-            else if (status === 'unwanted') {
+            } else if (status === 'unwanted') {
                 return 'background-color: #ff9999'
             }
 
@@ -54,66 +52,85 @@
 </head>
 
 
-    <%- include('partials/header') %>
-    <h1>Jobs Plus Results</h1>
+<%- include('partials/header') %>
+<h1>Jobs Plus Results</h1>
 
-    <form action="jobs" method="post">
-        Search keyword: <input name="search" value="<%=search%>">
-        Min salary: <input name="salaryMin" value="<%=salaryMin%>">
-        <input type="submit" value="Search">
-    </form>
+<div style="vertical-align:top">
+<form action="jobs" method="post" style="vertical-align:top">
+    Search keyword: <input name="search" value="<%= search %>">
+    Min salary: <input name="salaryMin" value="<%= salaryMin %>">
 
-    All (<%= totalCount?.toLocaleString() %>) Found Jobs for search: <%= search %>
-    <% jobs.forEach((job, index)=> { %>
-        <!-- todo color code each job block -->
-        <div id="<%= job.id %>" style="width:50%; border: solid black; <%=getJobColor(job?.userJobStatus);%>;">
-            <h2>
-                <%= index + 1 %>. <%= job.title %>
-            </h2>
-            <table>
-                <tr valign="top">
-                    <td width="50%">
-                        <b> Company:</b> <%= job.company %> - <%= job?.companySector %> <br>
-                        <b> Link:</b> <a href="<%= job.link %>" target="_blank">Job Link</a> - <br>
-                        <b> Salary:</b>
-                        <% if (!job.salaryMin) { %>
-                            Unknown <br>
-                        <% } else { %>
+    <fieldset style="display: inline-block;">
+        <legend>Job Status:</legend>
+
+        <div>
+            <input type="checkbox" id="appliedFilter" name="appliedFilter" value="checked" <%= appliedFilter ? 'checked' : '' %> >
+            <label for="appliedFilter">Applied</label>
+        </div>
+
+        <div>
+            <input type="checkbox" id="unwantedFilter" name="unwantedFilter" value="checked" <%= unwantedFilter ? 'checked' : '' %>>
+            <label for="unwantedFilter">Unwanted</label>
+        </div>
+    </fieldset>
+
+    <input type="submit" value="Search">
+</form>
+    <div>
+
+All (<%= totalCount?.toLocaleString() %>) Found Jobs for search: <%= search %>
+<% jobs.forEach((job, index)=> { %>
+    <!-- todo color code each job block -->
+    <div id="<%= job.id %>" style="width:50%; border: solid black; <%= getJobColor(job?.userJobStatus); %>;">
+        <h2>
+            <%= index + 1 %>. <%= job.title %>
+        </h2>
+        <table>
+            <tr valign="top">
+                <td width="50%">
+                    <b> Company:</b> <%= job.company %> - <%= job?.companySector %> <br>
+                    <b> Link:</b> <a href="<%= job.link %>" target="_blank">Job Link</a> - <br>
+                    <b> Salary:</b>
+                    <% if (!job.salaryMin) { %>
+                        Unknown <br>
+                    <% } else { %>
                         $<%= job.salaryMin?.toLocaleString() %> to
                         $<%= job.salaryMax?.toLocaleString() %>
                         yearly. <br>
-                        <% } %>
-                        <b> Date: </b> <%= job.createdAt %><br>
-                        <b> Source: </b> <%= job.sourceSite %><br>
-                        <br>
-                        <!-- optional areas... -->
-                        <b> Status: </b> <%= job?.userJobStatus %> <br>
-                        <a href="javascript:void(0)" onClick="appliedNow('<%= job.id %>')">Applied Now</a> <br>
-                        <a href="javascript:void(0)" onClick="markSaved('<%= job.id %>')">Mark Saved</a> <br>
-                        <a href="javascript:void(0)" onClick="markUnwanted('<%= job.id %>')">Mark Unwanted</a> <br>
-                        <br>
+                    <% } %>
+                    <b> Date: </b> <%=
+                        job.createdAt.toISOString().split('T')[0]
+                    %><br>
+                    <b> Source: </b> <%= job.sourceSite %><br>
+                    <br>
+                    <!-- optional areas... -->
+                    <b> Status: </b> <%= job?.userJobStatus %> <br>
+                    <a href="javascript:void(0)" onClick="appliedNow('<%= job.id %>')">Applied Now</a> <br>
+                    <a href="javascript:void(0)" onClick="markSaved('<%= job.id %>')">Mark Saved</a> <br>
+                    <a href="javascript:void(0)" onClick="markUnwanted('<%= job.id %>')">Mark Unwanted</a> <br>
+                    <br>
 
-                    </td>
-                    <td width="50%">
-                        <!-- todo optionally hidden fields first?, click anywhere here to trigger show  -->
-                        <a href="javascript:void(0);" onClick="toggleDetails('<%= job.id %>')">
-                            Show Details</a>
-                            <div id="<%= job.id + '-description' %>" style="display: none">
-                                <%- job.description %>
-                            </div>
+                </td>
+                <td width="50%">
+                    <!-- todo optionally hidden fields first?, click anywhere here to trigger show  -->
+                    <a href="javascript:void(0);" onClick="toggleDetails('<%= job.id %>')">
+                        Show Details</a>
+                    <div id="<%= job.id + '-description' %>" style="display: none">
+                        <%- job.description %>
+                    </div>
 
-                            <!-- todo add interaction buttons now -->
-                    </td>
-                </tr>
-            </table>
+                    <!-- todo add interaction buttons now -->
+                </td>
+            </tr>
+        </table>
 
-        </div>
-        </div>
-        </div> <!-- hackup -->
-        <br>
-    <% }) %>
+    </div>
+    </div>
+    </div> <!-- hackup -->
+    <br>
+<% }) %>
 
-    <%- include('partials/footer') %>
-    </body>
+<%- include('partials/footer') %>
+</body>
 
 </html>

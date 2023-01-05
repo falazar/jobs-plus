@@ -41,11 +41,11 @@ export const Application = getModelForClass(ApplicationClass);
 export async function findAll(userId: mongoose.Types.ObjectId): Promise<[ApplicationClass[], number]> {
     const filters = {
         // status: "applied"
-        // Any status not rejected, stopped
+        // Any status not user declined, company declined
         userId
     }
     let applications: ApplicationClass[] = await Application.find(filters)
-        .sort({applicationDate: 1})
+        .sort({applicationDate: -1})
         .limit(50)
     const totalCount: number = await Application.count(filters)
 
@@ -56,16 +56,12 @@ export async function findAll(userId: mongoose.Types.ObjectId): Promise<[Applica
 }
 
 
-// todo this desc
+// Given a list of application, add in some job details also.
 export async function addJobs(applications: ApplicationClass[]) {
     // const jobIds = applications.map((application) => application.jobId)
 
-    // Loop over each application and add job data.
+    // Loop over each application and add jobs extra data.
     for (const application of applications) {
-
-        // tslint:disable-next-line:no-console
-        console.log("Checking application now...:", application.jobId)
-
         application.job = await Job.findOne({_id: application.jobId})
     }
 

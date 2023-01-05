@@ -5,7 +5,6 @@ import {findAll} from "../models/application/application";
 import {mongoose} from "@typegoose/typegoose";
 
 
-
 export const register = async (app: express.Application) => {
     // Home page
     app.get("/", (req: any, res) => {
@@ -14,14 +13,28 @@ export const register = async (app: express.Application) => {
 
     // Jobs page, on first land, show all...
     app.get('/jobs', async (req, res) => {
-        const [jobs, totalCount] = await searchJobs("", 0);
-        res.render('jobs', {search: "", salaryMin: 0, jobs, totalCount});
+        const [jobs, totalCount] = await searchJobs("", 0, false, false);
+        res.render('jobs', {
+            search: "", salaryMin: 0,
+            appliedFilter: req.body.aopliedFiliter,
+            unwantedFilter: req.body.unwantedFilter,
+            jobs,
+            totalCount
+        });
     });
 
     // Search with posted details the jobs.
     app.post('/jobs', async (req, res) => {
-        const [jobs, totalCount] = await searchJobs(req.body.search, req.body.salaryMin);
-        res.render('jobs', {search: req.body.search, salaryMin: req.body.salaryMin, jobs, totalCount});
+        const [jobs, totalCount] = await searchJobs(req.body.search, req.body.salaryMin, req.body.appliedFilter,
+            req.body.unwantedFilter);
+        res.render('jobs', {
+            search: req.body.search,
+            salaryMin: req.body.salaryMin,
+            appliedFilter: req.body.appliedFilter,
+            unwantedFilter: req.body.unwantedFilter,
+            jobs,
+            totalCount
+        });
     });
 
     // TODO register page
@@ -43,8 +56,6 @@ export const register = async (app: express.Application) => {
         const [applications, totalCount] = await findAll(userId);
         res.render('applications', {applications, totalCount});
     })
-
-
 
 
     // About page
