@@ -17,31 +17,31 @@ DONE TODOLIST:
     DONE - Create applications page.
     DONE - LinkedIn scrapers
     DONE - Reformat all applications page to look like spreadsheet
+    DONE - Disable semicolons on the end.
+    DONE - Job Filter by Salaries.
+    DONE - Disable console.log warning.
+    DONE -  Add userJobResponses to save user responding to a posting.
+    DONE - Add prettier and run.
+    DONE - Filter jobs by date, default 1 week.
 
 
 TODO
-    Job Filter by Salaries.
     Add applicationAction object and allow new creation
     Allow manual creation of job, (for outside sourced ones)
-
-
     Job Filter OUT multiple job keywords. advanced search
-    Disable semicolons on the end.
-    Disable console.log warning.
-    1/2 Add userJobResponses to save user responding to a posting.
     Job Filter on multiple job titles.
+    Start basic code testing.
     Fill out Company Class.
         Company List editor - edit to add sector on.
         Show Company list.
         exclude companies we dont want to see.
     Fill out User class.
     How do we pass user id thru the site.
-    Start basic code testing.
     Do login part.
     Add paging on search results.
-    Export or print page to file Unemployment, with Texas as an example.
     Show stats, like avg salary for jobs per day, excluding ones we dont want.
     Show stats - how many jobs for each language, java, node, javascript, python, php and salary ranges?
+    Export or print page to file Unemployment, with Texas as an example.
 
 
     Ref populate references - how scalable are the underlying queries?
