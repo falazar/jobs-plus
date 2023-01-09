@@ -25,12 +25,16 @@ DONE TODOLIST:
     DONE - Filter jobs by date, default 1 week.
 
 
+    Add ability to mark as companydeclined or userdeclined for new status.
+
 TODO
     Add applicationAction object and allow new creation
     Allow manual creation of job, (for outside sourced ones)
+    Add stats on applications page, show how many jobs you applied avg every business day, and goal suggestion for today
     Job Filter OUT multiple job keywords. advanced search
     Job Filter on multiple job titles.
     Start basic code testing.
+    Match to previous duplicate postings, yuck
     Fill out Company Class.
         Company List editor - edit to add sector on.
         Show Company list.

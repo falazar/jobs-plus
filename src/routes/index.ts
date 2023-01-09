@@ -1,6 +1,7 @@
 import * as express from 'express'
 import { searchJobs } from '../models/job/job'
 import { saveUserJob } from '../models/userJob/userJob'
+import { changeApplicationStatus } from '../models/application/application'
 import { findAll } from '../models/application/application'
 import { mongoose } from '@typegoose/typegoose'
 
@@ -63,8 +64,47 @@ export const register = async (app: express.Application) => {
     // Application page listing.
     app.get('/applications', async (req, res) => {
         const userId = new mongoose.Types.ObjectId('1'.repeat(24))
-        const [applications, totalCount] = await findAll(userId)
-        res.render('applications', { applications, totalCount })
+        const [applications, totalCount, avgSalaryMin, avgSalaryMax] = await findAll(userId, false, true, false, false)
+        res.render('applications', {
+            applications,
+            totalCount,
+            avgSalaryMin,
+            avgSalaryMax,
+            allStatusFilter: false,
+            appliedStatusFilter: true,
+            userDeclinedStatusFilter: false,
+            companyDeclinedStatusFilter: false,
+        })
+    })
+
+    app.post('/applications', async (req, res) => {
+        const userId = new mongoose.Types.ObjectId('1'.repeat(24))
+        const [applications, totalCount, avgSalaryMin, avgSalaryMax] = await findAll(
+            userId,
+            req.body.allStatusFilter,
+            req.body.appliedStatusFilter,
+            req.body.userDeclinedStatusFilter,
+            req.body.companyDeclinedStatusFilter
+        )
+        res.render('applications', {
+            applications,
+            totalCount,
+            avgSalaryMin,
+            avgSalaryMax,
+            allStatusFilter: req.body.allStatusFilter,
+            appliedStatusFilter: req.body.appliedStatusFilter,
+            userDeclinedStatusFilter: req.body.userDeclinedStatusFilter,
+            companyDeclinedStatusFilter: req.body.companyDeclinedStatusFilter,
+        })
+    })
+
+    app.get('/application/:applicationId/:status', async (req, res) => {
+        // tslint:disable-next-line:no-console
+        console.log('saving req.params jobId = ' + req.params.applicationId)
+        console.log('saving req.params status = ' + req.params.status)
+
+        await changeApplicationStatus(req.params.applicationId, req.params.status)
+        res.send(req.params)
     })
 
     // About page

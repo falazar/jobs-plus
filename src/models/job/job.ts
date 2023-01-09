@@ -62,7 +62,18 @@ export async function searchJobs(
     const searchRegex = new RegExp(`.*${search}.*`, 'i')
 
     // todo pull out nots in titles to user settings.
-    const notInTitles = new Set(['android', 'ios', 'front', 'golang', 'ruby', '.net', 'drupal', 'president', 'vp'])
+    const notInTitles = new Set([
+        'android',
+        'ios',
+        'front',
+        'golang',
+        'ruby',
+        '.net',
+        'drupal',
+        'president',
+        'vp',
+        'chief technology',
+    ])
 
     const notTitleWords = Array.from(notInTitles).join('|')
     const notRegex = new RegExp(`(${notTitleWords})`, 'i')

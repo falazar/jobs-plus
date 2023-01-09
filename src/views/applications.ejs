@@ -5,7 +5,27 @@
 <head>
     <meta charset="utf-8">
     <title>Applications Page</title>
-    <script>
+
+
+    <style>
+        th {
+            background-color: deepskyblue;
+            border: 1px solid black;
+            font-weight: bold;
+        }
+
+        td {
+            border: 1px solid black;
+        }
+
+        tr:nth-child(even) {
+            background-color: lightgrey;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+    </style>    <script>
         <!-- todo change all these. -->
         function toggleDetails(jobId) {
             let el = document.getElementById(jobId + '-description')
@@ -30,56 +50,80 @@
             el.style.display = 'none'
         }
 
+        function changeStatus(applicationId, e) {
+            fetch("/application/" + applicationId + "/" + e.value)
+
+            // Hide application or color red now to show unwanted.
+            // let el = document.getElementById(jobId)
+            // el.style.display = 'none'
+        }
+
         <%
         // Given a set of statuses show color.
-        function getJobColor(status) {
-            if (status === 'saved') {
-                return 'background-color: #99ff99'
-            } else if (status === 'unwanted') {
-                return 'background-color: #ff9999'
+        function getApplicationColor(status) {
+            if (status === 'companydeclined') {
+                return 'background-color: #ffabab'
+            } else if (status === 'userdeclined') {
+                return 'background-color: #ffabab'
             }
 
-            return 'background-color: aquamarine'
+            return ''
         }
         %>
     </script>
+
 </head>
 
 
 <%- include('partials/header') %>
 <h1>Applications Plus Results</h1>
 
+<form action="applications" method="post">
+    Filters:
+
+    <fieldset style="display: inline-block;">
+        <legend>Status:</legend>
+
+        <div>
+            <input type="checkbox" id="allStatusFilter" name="allStatusFilter"
+                   value="checked" <%= allStatusFilter ? 'checked' : '' %> >
+            <label for="appliedFilter">All Status</label>
+        </div>
+
+        <div>
+            <input type="checkbox" id="appliedStatusFilter" name="appliedStatusFilter"
+                   value="checked" <%= appliedStatusFilter ? 'checked' : '' %> >
+            <label for="appliedFilter">Applied Status</label>
+        </div>
+
+        <div>
+            <input type="checkbox" id="userDeclinedStatusFilter" name="userDeclinedStatusFilter"
+                   value="checked" <%= userDeclinedStatusFilter ? 'checked' : '' %> >
+            <label for="appliedFilter">User Declined</label>
+        </div>
+
+        <div>
+            <input type="checkbox" id="companyDeclinedStatusFilter" name="companyDeclinedStatusFilter"
+                   value="checked" <%= companyDeclinedStatusFilter ? 'checked' : '' %> >
+            <label for="appliedFilter">Company Declined</label>
+        </div>
+
+    </fieldset>
+
+    <input type="submit" value="search">
+
+</form>
+
 All your current (<%= applications.length %>) applications: <br>
 
 
-<style>
-    th {
-        background-color: deepskyblue;
-        border: 1px solid black;
-        font-weight: bold;
-    }
-
-    td {
-        border: 1px solid black;
-    }
-
-    tr:nth-child(even) {
-        background-color: lightgrey;
-    }
-
-    table {
-        border-collapse: collapse;
-    }
-</style>
-
-<!--TODO setup filters to only show current job applications-->
-
+Stats: $<%= avgSalaryMin.toLocaleString() %> to $<%= avgSalaryMax.toLocaleString() %>
+Med: $<%= (Math.round((avgSalaryMin + avgSalaryMax) / 2 / 1000) * 1000).toLocaleString() %>
 <table>
     <tr>
         <th> Num</th>
         <th> Applied Date</th>
         <th> Status</th>
-        <th> Actions</th>
         <th> Title</th>
         <th> Company</th>
         <th> Market</th>
@@ -97,8 +141,8 @@ All your current (<%= applications.length %>) applications: <br>
     applications.forEach((application, index)=> {
         const job = application.job
     %>
-    <tr valign="top">
-        <td> <%= index+1 %>.</td>
+    <tr valign="top" style=" <%= getApplicationColor(application?.status); %>;">
+        <td> <%= index + 1 %>.</td>
         <td>
             <%
                 var date = application?.applicationDate.toISOString().split('T')[0]
@@ -106,10 +150,11 @@ All your current (<%= applications.length %>) applications: <br>
             <%= date %>
         </td>
         <td> <%= application?.status %>
-            <!--            TODO pull down changable list here for statuses-->
-        </td>
-        <td>
-            <!--            TODO buttons for adding actiions-->
+            <select name="status" onChange="changeStatus('<%= application?._id %>',this)">
+                <option value=""></option>
+                <option value="companydeclined">Company declined</option>
+                <option value="userdeclined">User declined</option>
+            </select>
         </td>
         <td> <%= job?.title %>
 

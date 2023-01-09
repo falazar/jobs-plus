@@ -1,8 +1,7 @@
-import * as puppeteer from "puppeteer";
+import * as puppeteer from 'puppeteer'
 import * as mongoose from 'mongoose'
-import {Job} from "../models/job/job";
-import {saveNewCompanies} from "../models/company/company";
-
+import { Job } from '../models/job/job'
+import { saveNewCompanies } from '../models/company/company'
 
 /***
  * Cronjob: Scrape a set of urls from LinkedIn and save all as new jobs to our db.
@@ -11,35 +10,34 @@ import {saveNewCompanies} from "../models/company/company";
  node -e 'require("./build/cronjobs/linkedin_search_scraper").run()'
  */
 
-
-
 export async function run() {
     // Connect to MongoDB
-    await mongoose.connect('mongodb://localhost:27017/', {dbName: 'test'});
+    await mongoose.connect('mongodb://localhost:27017/', { dbName: 'test' })
 
     // todo scrape sort by date each time
     // Choose randomly from a list or urls for now.
     let urls = [
         // 'https://www.linkedin.com/jobs/search/?keywords=javascript&location=United%20States&refresh=true&sortBy=R&start=0&sortBy=DD',
         'https://www.linkedin.com/jobs/search/?f_JT=F&f_SB2=8&f_TPR=r604800&f_WT=2&geoId=103644278&keywords=javascript&location=United%20States&refresh=true&sortBy=DD',
+        'https://www.linkedin.com/jobs/search/?f_JT=F&f_SB2=8&f_TPR=r604800&f_WT=2&geoId=103644278&keywords=node&location=United%20States&refresh=true&sortBy=DD',
+        'https://www.linkedin.com/jobs/search/?f_JT=F&f_SB2=8&f_TPR=r604800&f_WT=2&geoId=103644278&keywords=typescript&location=United%20States&refresh=true&sortBy=DD',
     ]
 
     urls = urls
-        .map(value => ({value, sort: Math.random()}))
+        .map((value) => ({ value, sort: Math.random() }))
         .sort((a, b) => a.sort - b.sort)
-        .map(({value}) => value)
+        .map(({ value }) => value)
     // tslint:disable-next-line:no-console
-    console.log("urls", urls)
+    console.log('urls', urls)
 
     await scrapeLinkedindPage(urls[0])
-
 }
 
 async function scrapeLinkedindPage(indeedUrl: string) {
     // tslint:disable-next-line:no-console
-    console.log("Linkedin scrape starting... url=", indeedUrl)
+    console.log('Linkedin scrape starting... url=', indeedUrl)
 
-    const pptr = require('puppeteer-core');
+    const pptr = require('puppeteer-core')
     // TODO Note: cant get it to use same session and be logged in as me.
     const browser = await pptr.launch({
         headless: false,
@@ -48,12 +46,11 @@ async function scrapeLinkedindPage(indeedUrl: string) {
         //     '--user-data-dir=/Users/jamesratcliff/Library/Application Support/Google/Chrome/',
         //     // '--no-sandbox', '--disable-setuid-sandbox',
         // ],
-    });
+    })
 
-
-    const page = await browser.newPage();
-    await page.setViewport({width: 1920, height: 926});
-    await page.goto(indeedUrl);
+    const page = await browser.newPage()
+    await page.setViewport({ width: 1920, height: 926 })
+    await page.goto(indeedUrl)
 
     // TODO login instead test after page load.
     // await page.waitForSelector('#login_form')
@@ -61,9 +58,8 @@ async function scrapeLinkedindPage(indeedUrl: string) {
     // await page.type('input#pass', 'PASSWORD')
     // await page.click('#loginbutton')
 
-
     const data = await page.content()
-    await page.screenshot({path: 'example.png'});
+    await page.screenshot({ path: 'example.png' })
 
     // Manually scrape instead and find our data points.
     // tslint:disable-next-line:no-console
@@ -71,9 +67,8 @@ async function scrapeLinkedindPage(indeedUrl: string) {
 
     // TODO need to be logged in for proper all filters to work, remote etc.
 
-
     // Loop over each item now....
-    const rows = data.split(/<div class="base-card relative/i);
+    const rows = data.split(/<div class="base-card relative/i)
     // console.log('row 0', rows[0])
     // tslint:disable-next-line:no-console
     // console.log('rows', rows)
@@ -87,11 +82,11 @@ async function scrapeLinkedindPage(indeedUrl: string) {
         // Grab out each important field.
         const company = row.match(/job-search-card-subtitle">\n* *(.*?)\n* *</ims)?.[1]
         // tslint:disable-next-line:no-console
-        console.log("\ncompany=" + company + "*")
+        console.log('\ncompany=' + company + '*')
 
         const title = row.match(/base-search-card__title">[ \n]*(.*?) *\n* *</ims)?.[1]
         // tslint:disable-next-line:no-console
-        console.log("title=" + title + '*')
+        console.log('title=' + title + '*')
         // todo strip whitespaces
 
         // JOB URL HERE
@@ -101,23 +96,22 @@ async function scrapeLinkedindPage(indeedUrl: string) {
         const matchJobKey = row.match(/jobPosting:(\d+)"/)
         const jobKey = matchJobKey?.[1]
         // tslint:disable-next-line:no-console
-        console.log("jobKey = ", jobKey)
+        console.log('jobKey = ', jobKey)
 
         // datetime="2022-12-17"
         const pubDate = row.match(/datetime="(.*?)"/)?.[1]
         //     const pubDate: number = Number(pubDateStr)
         // TODO CONVERT to proper date?
         // tslint:disable-next-line:no-console
-        console.log("pubDate = ", pubDate)
-
+        console.log('pubDate = ', pubDate)
 
         const location = row.match(/job-search-card__location">\n* *(.*?)\n* *</ims)?.[1]
         // tslint:disable-next-line:no-console
-        console.log("location =" + location + "*")
+        console.log('location =' + location + '*')
 
         // $175,000 - $195,000 in listing.
-        const regex2 = />\$(\d+),000 *- *\$(\d+),000/ims;
-        const matches2 = row.match(regex2);
+        const regex2 = />\$(\d+),000 *- *\$(\d+),000/ims
+        const matches2 = row.match(regex2)
         // Update job fields here.
         let salaryMin = null
         let salaryMax = null
@@ -129,33 +123,31 @@ async function scrapeLinkedindPage(indeedUrl: string) {
             salaryMax = parseInt(matches2[2], 10) * 1000
         }
 
-
         // Add an object to our array.
         if (jobKey) {
             const job = {
                 _id: new mongoose.Types.ObjectId(),
                 title,
-                sourceSite: "linkedin",
+                sourceSite: 'linkedin',
                 linkedinJobKey: jobKey,
                 company,
                 city: location,
                 pubDate,
-                link: "https://www.linkedin.com/jobs/view/" + jobKey,
+                link: 'https://www.linkedin.com/jobs/view/' + jobKey,
                 salaryMin,
-                salaryMax
+                salaryMax,
             }
             jobs.push(job)
         }
     })
 
     // tslint:disable-next-line:no-console
-    console.log("jobs list: ", jobs)
+    console.log('jobs list: ', jobs)
     await saveNewJobs(jobs)
 
     // tslint:disable-next-line:no-console
-    console.log("completed scraping")
+    console.log('completed scraping')
 }
-
 
 // todo move this to other areas later.
 async function saveNewJobs(jobs: any[]) {
@@ -163,7 +155,7 @@ async function saveNewJobs(jobs: any[]) {
     const jobKeys = jobs.map((job) => job.linkedinJobKey)
 
     // Step 2: Call to query to find dupes.
-    const knownJobs = await Job.find({linkedinJobKey: {$in: jobKeys}})
+    const knownJobs = await Job.find({ linkedinJobKey: { $in: jobKeys } })
     const knownJobKeys = knownJobs.map((job) => job.linkedinJobKey)
 
     // Step 3:  Remove those from this list.
@@ -182,9 +174,6 @@ async function saveNewJobs(jobs: any[]) {
         await saveNewCompanies(companies)
     } else {
         // tslint:disable-next-line:no-console
-        console.log("Inserting no new jobs, no new found.")
+        console.log('Inserting no new jobs, no new found.')
     }
-
 }
-
-
